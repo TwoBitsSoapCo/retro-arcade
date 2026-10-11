@@ -141,6 +141,24 @@ body.game-page { height: 100vh; display: flex; flex-direction: column; overflow:
     radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.45) 100%);
 }
 
+.screen-wrap.vector canvas { image-rendering: auto; }
+.mouse-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 12px;
+  line-height: 1.4;
+  font-size: 13px;
+  color: var(--vortex);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 /* ---------- settings panel ---------- */
 
 .panel-backdrop {

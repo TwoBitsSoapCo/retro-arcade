@@ -5,7 +5,9 @@ Two fan-made tributes to classic arcade games that run in any modern web browser
 | Game | Tribute to | Status |
 |---|---|---|
 | **Star Invaders** | Space Invaders (Taito, 1978) | Playable |
-| **Vortex** | Tempest (Atari, 1981) | Coming soon |
+| **Vortex** | Tempest (Atari, 1981) | Playable |
+
+Play online: https://twobitssoapco.github.io/retro-arcade/
 
 ## Playing locally
 
@@ -33,7 +35,7 @@ css/arcade.css       shared styles
 js/home.js           home page card animations
 js/shared/           code shared by both games: sound, keyboard, storage, pixel font
 invaders/            Star Invaders (sprites, sound, game logic, page wiring)
-vortex/              Vortex (coming soon)
+vortex/              Vortex (web shapes, sound, game logic, page wiring)
 ```
 
 ## Legal

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Vortex</title>
+  <link rel="stylesheet" href="../css/arcade.css">
+</head>
+<body class="game-page">
+  <header class="game-bar">
+    <a class="back" href="../index.html">&larr; Arcade</a>
+    <span class="keys">&larr; &rarr; / A D spin &middot; SPACE / &uarr; / W fire &middot; &darr; / S / SHIFT superzap &middot; P pause &middot; M mute &middot; ESC settings</span>
+    <span class="bar-buttons">
+      <button type="button" id="muteBtn">Sound: ON</button>
+      <button type="button" id="settingsBtn">Settings</button>
+    </span>
+  </header>
+
+  <main class="stage">
+    <div class="screen-wrap vector" id="screenWrap">
+      <canvas id="screen" width="600" height="800" tabindex="0" aria-label="Vortex game screen"></canvas>
+      <p class="mouse-hint" id="mouseHint" hidden>Click the game to use the mouse as a spinner</p>
+    </div>
+  </main>
+
+  <div class="panel-backdrop" id="settings" hidden>
+    <form class="panel" id="settingsForm" autocomplete="off">
+      <h1 class="panel-title vortex-title">VORTEX</h1>
+      <p class="panel-sub">A tribute to the 1981 vector arcade classic</p>
+
+      <fieldset>
+        <legend>Players</legend>
+        <label class="radio"><input type="radio" name="players" value="1"> 1 player</label>
+        <label class="radio"><input type="radio" name="players" value="2"> 2 players (take turns)</label>
+      </fieldset>
+
+      <div class="grid">
+        <label>Starting level
+          <select name="startLevel">
+            <option value="1">Level 1</option>
+            <option value="3">Level 3 (+6,000 bonus)</option>
+            <option value="5">Level 5 (+16,000 bonus)</option>
+            <option value="7">Level 7 (+32,000 bonus)</option>
+            <option value="9">Level 9 (+54,000 bonus)</option>
+            <option value="11">Level 11 (+74,000 bonus)</option>
+            <option value="13">Level 13 (+94,000 bonus)</option>
+            <option value="15">Level 15 (+114,000 bonus)</option>
+            <option value="17">Level 17 (+134,000 bonus)</option>
+          </select>
+        </label>
+        <label>Difficulty
+          <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="normal">Normal (arcade)</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+        <label>Game speed
+          <select name="speed">
+            <option value="0.75">75% (relaxed)</option>
+            <option value="0.9">90%</option>
+            <option value="1">100% (arcade)</option>
+            <option value="1.1">110%</option>
+            <option value="1.25">125% (frantic)</option>
+          </select>
+        </label>
+        <label>Lives
+          <select name="lives">
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+        <label>Bonus life every
+          <select name="bonus">
+            <option value="10000">10,000 points</option>
+            <option value="20000">20,000 points</option>
+            <option value="30000">30,000 points</option>
+            <option value="0">No bonus lives</option>
+          </select>
+        </label>
+        <label>Keyboard spin speed
+          <select name="spin">
+            <option value="slow">Slow</option>
+            <option value="normal">Normal</option>
+            <option value="fast">Fast</option>
+          </select>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Controls, display &amp; sound</legend>
+        <label class="check"><input type="checkbox" name="mouse"> Mouse spinner (slide to spin, left-click fire, right-click superzap)</label>
+        <label class="check"><input type="checkbox" name="glow"> Vector glow (turn off if the game is slow)</label>
+        <label class="range">Volume <input type="range" name="volume" min="0" max="100" step="5"></label>
+      </fieldset>
+
+      <details class="howto">
+        <summary>How to play</summary>
+        <p>You are the yellow claw on the rim of the tube. Spin around the rim with <kbd>&larr;</kbd> <kbd>&rarr;</kbd> (or <kbd>A</kbd> <kbd>D</kbd>)
+          and fire down your lane with <kbd>Space</kbd>, <kbd>&uarr;</kbd> or <kbd>W</kbd>. Holding fire keeps shooting.</p>
+        <p>Flippers (red) crawl up and grab you on the rim. Tankers (purple) split into two flippers. Spikers (green) leave spikes,
+          so shoot them down before the warp to the next level. Fuseballs and pulsars come later.</p>
+        <p>The <b>Superzapper</b> (<kbd>&darr;</kbd>, <kbd>S</kbd> or <kbd>Shift</kbd>) destroys everything on screen once per level,
+          and one random enemy the second time.</p>
+        <p><kbd>P</kbd> pause &middot; <kbd>M</kbd> mute &middot; <kbd>Esc</kbd> this menu &middot; <kbd>Enter</kbd> start from the title screen</p>
+      </details>
+
+      <p class="note">Players, lives, difficulty and starting level apply when a new game starts. Settings and high scores are saved in this browser only.</p>
+
+      <div class="buttons">
+        <button type="submit" class="primary">Start Game</button>
+        <button type="button" id="resumeBtn">Resume</button>
+        <button type="button" id="quitBtn">Quit to Title</button>
+        <button type="button" id="closeBtn">Title Screen</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="../js/shared/audio.js"></script>
+  <script src="../js/shared/input.js"></script>
+  <script src="../js/shared/storage.js"></script>
+  <script src="../js/shared/vectorfont.js"></script>
+  <script src="webs.js"></script>
+  <script src="sound.js"></script>
+  <script src="game.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

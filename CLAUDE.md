@@ -9,10 +9,15 @@ A static browser arcade with two tributes: Star Invaders (Space Invaders) and Vo
 - Keep this project completely separate from the owner's "Two Bits" work site.
 - Validate anything read from localStorage (see `js/shared/storage.js`, keys prefixed `retro-arcade.`).
 
-## Game architecture (follow this for Vortex)
+## Hosting
+- Public repo `TwoBitsSoapCo/retro-arcade` (a separate repo on the owner's business account, at their request). GitHub Pages serves it from `main` at https://twobitssoapco.github.io/retro-arcade/. Pushing to `main` redeploys.
+- Commits use the account's GitHub noreply email (set in this repo's local git config) so the business email stays private.
+
+## Game architecture (both games)
 - `game.js` holds a `Game` class with `update(input)` at a fixed 60 ticks/sec and `render(ctx)`. States include attract, ready, playing, dying, gameover and initials.
 - `main.js` handles the page: the settings form (sanitized, saved to `<game>.settings`), Esc/P/M keys, screen scaling and the fixed-timestep loop (`settings.speed` scales the tick rate).
 - Sound goes through `window.ArcadeAudio` (`tone`, `noise`). Game-specific effects live in `sound.js`.
+- Star Invaders (`SI`) uses a 224x256 pixel screen and `PixelFont`. Vortex (`VX`) uses a 600x800 logical vector screen, drawn at device resolution, with `VectorFont`. Its entities are (lane, depth z) with z=0 at the rim; `webs.js` defines the 16 tube shapes. Mouse-spinner mode uses pointer lock.
 
 ## Testing
 - Preview: `.claude/launch.json` config "arcade" (python http.server on 8080).
