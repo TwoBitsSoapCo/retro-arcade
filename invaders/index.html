@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Star Invaders</title>
+  <link rel="stylesheet" href="../css/arcade.css">
+</head>
+<body class="game-page">
+  <header class="game-bar">
+    <a class="back" href="../index.html">&larr; Arcade</a>
+    <span class="keys">&larr; &rarr; / A D move &middot; SPACE / &uarr; / W fire &middot; P pause &middot; M mute &middot; ESC settings</span>
+    <span class="bar-buttons">
+      <button type="button" id="muteBtn">Sound: ON</button>
+      <button type="button" id="settingsBtn">Settings</button>
+    </span>
+  </header>
+
+  <main class="stage">
+    <div class="screen-wrap crt" id="screenWrap">
+      <canvas id="screen" width="224" height="256" tabindex="0" aria-label="Star Invaders game screen"></canvas>
+    </div>
+  </main>
+
+  <div class="panel-backdrop" id="settings" hidden>
+    <form class="panel" id="settingsForm" autocomplete="off">
+      <h1 class="panel-title invaders-title">STAR INVADERS</h1>
+      <p class="panel-sub">A tribute to the 1978 arcade classic</p>
+
+      <fieldset>
+        <legend>Players</legend>
+        <label class="radio"><input type="radio" name="players" value="1"> 1 player</label>
+        <label class="radio"><input type="radio" name="players" value="2"> 2 players (take turns)</label>
+      </fieldset>
+
+      <div class="grid">
+        <label>Difficulty
+          <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="normal">Normal (arcade)</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+        <label>Game speed
+          <select name="speed">
+            <option value="0.75">75% (relaxed)</option>
+            <option value="0.9">90%</option>
+            <option value="1">100% (arcade)</option>
+            <option value="1.1">110%</option>
+            <option value="1.25">125% (frantic)</option>
+          </select>
+        </label>
+        <label>Lives
+          <select name="lives">
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </label>
+        <label>Bonus life at
+          <select name="bonus">
+            <option value="1000">1,000 points</option>
+            <option value="1500">1,500 points</option>
+            <option value="0">No bonus life</option>
+          </select>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Display &amp; sound</legend>
+        <label class="check"><input type="checkbox" name="overlay"> Color overlay strips (like the real cabinet)</label>
+        <label class="check"><input type="checkbox" name="crt"> CRT scanlines</label>
+        <label class="range">Volume <input type="range" name="volume" min="0" max="100" step="5"></label>
+      </fieldset>
+
+      <details class="howto">
+        <summary>How to play</summary>
+        <p>Move with <kbd>&larr;</kbd> <kbd>&rarr;</kbd> (or <kbd>A</kbd> <kbd>D</kbd>), fire with <kbd>Space</kbd>, <kbd>&uarr;</kbd> or <kbd>W</kbd>. You can only have one shot on screen at a time.
+          Hide behind the shields, but they crumble. Hit the red mystery ship for bonus points.
+          If the invaders reach the ground, the game is over.</p>
+        <p><kbd>P</kbd> pause &middot; <kbd>M</kbd> mute &middot; <kbd>Esc</kbd> this menu &middot; <kbd>Enter</kbd> start from the title screen</p>
+      </details>
+
+      <p class="note">Players, lives and difficulty apply when a new game starts. Settings and high scores are saved in this browser only.</p>
+
+      <div class="buttons">
+        <button type="submit" class="primary">Start Game</button>
+        <button type="button" id="resumeBtn">Resume</button>
+        <button type="button" id="quitBtn">Quit to Title</button>
+        <button type="button" id="closeBtn">Title Screen</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="../js/shared/audio.js"></script>
+  <script src="../js/shared/input.js"></script>
+  <script src="../js/shared/storage.js"></script>
+  <script src="../js/shared/pixelfont.js"></script>
+  <script src="sprites.js"></script>
+  <script src="sound.js"></script>
+  <script src="game.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
