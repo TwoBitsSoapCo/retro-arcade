@@ -496,8 +496,8 @@
       if (typed.length) {
         for (const ch of typed) if (e.pos < 3) e.letters[e.pos++] = LETTERS.indexOf(ch);
       } else {
-        if (input.pressed('up')) e.letters[e.pos] = (e.letters[e.pos] + 1) % 26;
-        if (input.pressed('down')) e.letters[e.pos] = (e.letters[e.pos] + 25) % 26;
+        if (input.pressed('up') || input.pressed('tright')) e.letters[e.pos] = (e.letters[e.pos] + 1) % 26;
+        if (input.pressed('down') || input.pressed('tleft')) e.letters[e.pos] = (e.letters[e.pos] + 25) % 26;
         if (input.pressed('left') && e.pos > 0) e.pos--;
         if (input.pressed('right') || input.pressed('select')) e.pos++;
       }
@@ -680,8 +680,8 @@
           Font.draw(ctx, pad(s.score, 5), 128, y);
         });
       }
-      if ((this.t >> 5) & 1) Font.center(ctx, 'PRESS ENTER TO PLAY', 210, 1, W);
-      Font.center(ctx, 'ESC - SETTINGS', 226, 1, W);
+      if ((this.t >> 5) & 1) Font.center(ctx, this.touch ? 'TAP FIRE TO PLAY' : 'PRESS ENTER TO PLAY', 210, 1, W);
+      Font.center(ctx, this.touch ? 'SETTINGS BUTTON - MENU' : 'ESC - SETTINGS', 226, 1, W);
     }
 
     drawInitials(ctx) {
@@ -694,8 +694,8 @@
       const x0 = Math.round((W - Font.width(str, 3)) / 2);
       Font.draw(ctx, str, x0, 148, 3);
       if ((this.t >> 4) & 1 && e.pos < 3) ctx.fillRect(x0 + e.pos * 24, 172, 15, 2);
-      Font.center(ctx, 'TYPE OR UP/DOWN', 196, 1, W);
-      Font.center(ctx, 'SPACE = NEXT', 208, 1, W);
+      Font.center(ctx, this.touch ? 'ARROWS = LETTER' : 'TYPE OR UP/DOWN', 196, 1, W);
+      Font.center(ctx, this.touch ? 'FIRE = NEXT' : 'SPACE = NEXT', 208, 1, W);
     }
 
     // The original cabinet had no color, just strips of colored cellophane on the screen.

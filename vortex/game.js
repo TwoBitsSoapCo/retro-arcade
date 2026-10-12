@@ -240,7 +240,7 @@
           if (this.t >= 180) this.afterGameOver();
           break;
         case 'initials':
-          this.updateInitials(input);
+          this.updateInitials(input, spin);
           break;
       }
       this.booms = this.booms.filter((b) => ++b.t < b.life);
@@ -614,9 +614,11 @@
       this.toReady(this.wasWarping && !switched);
     }
 
-    updateInitials(input) {
+    updateInitials(input, spin) {
       const e = this.entry;
       const typed = input.typed();
+      // Spinning (touch strip or mouse) also changes the current letter.
+      if (spin && e.pos < 3) e.letters[e.pos] = (((e.letters[e.pos] + spin) % 26) + 26) % 26;
       if (typed.length) {
         for (const ch of typed) if (e.pos < 3) e.letters[e.pos++] = LETTERS.indexOf(ch);
       } else {
@@ -1000,8 +1002,8 @@
           VF.draw(ctx, String(s.score), 450, y, 20, color, 'right');
         });
       }
-      if ((this.t >> 5) & 1) VF.draw(ctx, 'PRESS ENTER TO PLAY', W / 2, 712, 20, '#ffffff', 'center');
-      VF.draw(ctx, 'ESC - SETTINGS', W / 2, 752, 14, '#9a9ab8', 'center');
+      if ((this.t >> 5) & 1) VF.draw(ctx, this.touch ? 'TAP FIRE TO PLAY' : 'PRESS ENTER TO PLAY', W / 2, 712, 20, '#ffffff', 'center');
+      VF.draw(ctx, this.touch ? 'SETTINGS BUTTON - MENU' : 'ESC - SETTINGS', W / 2, 752, 14, '#9a9ab8', 'center');
     }
 
     drawInitials(ctx) {
@@ -1021,8 +1023,8 @@
         ctx.lineTo(x0 + 40, 470);
         this.stroke(ctx, COLORS.player);
       }
-      VF.draw(ctx, 'TYPE OR UP/DOWN', W / 2, 540, 16, '#9a9ab8', 'center');
-      VF.draw(ctx, 'SPACE = NEXT', W / 2, 570, 16, '#9a9ab8', 'center');
+      VF.draw(ctx, this.touch ? 'SLIDE TO CHANGE LETTER' : 'TYPE OR UP/DOWN', W / 2, 540, 16, '#9a9ab8', 'center');
+      VF.draw(ctx, this.touch ? 'FIRE = NEXT' : 'SPACE = NEXT', W / 2, 570, 16, '#9a9ab8', 'center');
     }
   }
 

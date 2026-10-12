@@ -7,11 +7,14 @@
 
   const DEFAULTS = {
     players: 1, startLevel: 1, difficulty: 'normal', speed: 1, lives: 3, bonus: 20000,
-    spin: 'normal', mouse: false, glow: true, volume: 60,
+    spin: 'normal', mouse: false, autofire: false,
+    glow: !window.matchMedia('(pointer: coarse)').matches, // the glow is heavy for phones, so off there by default
+    volume: 60,
   };
   const SPEEDS = [0.75, 0.9, 1, 1.1, 1.25];
   const START_LEVELS = [1, 3, 5, 7, 9, 11, 13, 15, 17];
   const MOUSE_PIXELS_PER_LANE = 18;
+  const TOUCH_PIXELS_PER_LANE = 16;
 
   // Only accept known values from storage. Anything unexpected falls back to the default.
   function sanitize(o) {
@@ -25,6 +28,7 @@
     if ([0, 10000, 20000, 30000].includes(o.bonus)) s.bonus = o.bonus;
     if (['slow', 'normal', 'fast'].includes(o.spin)) s.spin = o.spin;
     if (typeof o.mouse === 'boolean') s.mouse = o.mouse;
+    if (typeof o.autofire === 'boolean') s.autofire = o.autofire;
     if (typeof o.glow === 'boolean') s.glow = o.glow;
     if (Number.isFinite(o.volume)) s.volume = Math.max(0, Math.min(100, Math.round(o.volume)));
     return s;
@@ -83,15 +87,18 @@
     updateMouseHint();
   });
 
-  // Combined keyboard + mouse controls handed to the game each tick.
+  // Combined keyboard + mouse + touch controls handed to the game each tick.
+  let touchAcc = 0;
   const input = {
-    down: (a) => keys.down(a) || (a === 'fire' && mouse.fire),
+    down: (a) => keys.down(a) || (a === 'fire' && (mouse.fire || settings.autofire)),
     pressed: (a) => keys.pressed(a) || (a === 'fire' && mouse.firePressed) || (a === 'zap' && mouse.zap),
     typed: () => keys.typed(),
     spin() {
-      const steps = Math.trunc(mouse.acc / MOUSE_PIXELS_PER_LANE);
-      mouse.acc -= steps * MOUSE_PIXELS_PER_LANE;
-      return steps;
+      const m = Math.trunc(mouse.acc / MOUSE_PIXELS_PER_LANE);
+      mouse.acc -= m * MOUSE_PIXELS_PER_LANE;
+      const t = Math.trunc(touchAcc / TOUCH_PIXELS_PER_LANE);
+      touchAcc -= t * TOUCH_PIXELS_PER_LANE;
+      return m + t;
     },
     endTick() {
       keys.endTick();
@@ -104,6 +111,18 @@
   let settings = sanitize(Store.get('vortex.settings', null));
   game.settings = settings;
 
+  // ---------- touch controls (phones and tablets) ----------
+
+  const Touch = window.ArcadeTouch;
+  const unlockAudio = () => Audio.init();
+  Touch.pad(document.getElementById('tSpin'), (dx) => { touchAcc += dx; }, unlockAudio);
+  Touch.button(document.getElementById('tFire'), keys, { hold: 'fire', taps: ['fire', 'select', 'start'], onPress: unlockAudio });
+  Touch.button(document.getElementById('tZap'), keys, { taps: ['zap'], onPress: unlockAudio });
+  Touch.init(() => {
+    game.touch = true;
+    setTimeout(fit); // after the rest of this file has set up
+  });
+
   // ---------- settings panel ----------
 
   function fillForm() {
@@ -115,6 +134,7 @@
     form.bonus.value = String(settings.bonus);
     form.spin.value = settings.spin;
     form.mouse.checked = settings.mouse;
+    form.autofire.checked = settings.autofire;
     form.glow.checked = settings.glow;
     form.volume.value = String(settings.volume);
   }
@@ -129,6 +149,7 @@
       bonus: Number(form.bonus.value),
       spin: form.spin.value,
       mouse: form.mouse.checked,
+      autofire: form.autofire.checked,
       glow: form.glow.checked,
       volume: Number(form.volume.value),
     });
@@ -232,8 +253,9 @@
   let viewScale = 1;
   function fit() {
     const { W, H } = VX.SCREEN;
-    const bar = document.querySelector('.game-bar').offsetHeight;
-    const s = Math.min((window.innerWidth - 32) / W, (window.innerHeight - bar - 32) / H);
+    const stage = document.querySelector('.stage');
+    const pad = Touch.active ? 16 : 32;
+    const s = Math.min((stage.clientWidth - pad) / W, (stage.clientHeight - pad) / H);
     const cssW = Math.max(150, Math.floor(W * s));
     const cssH = Math.max(200, Math.floor(H * s));
     const dpr = Math.min(window.devicePixelRatio || 1, 2);

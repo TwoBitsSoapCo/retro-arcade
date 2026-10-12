@@ -104,7 +104,14 @@ a.cabinet:hover, a.cabinet:focus-visible { transform: translateY(-3px); }
 
 /* ---------- game pages ---------- */
 
-body.game-page { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body.game-page {
+  height: 100vh;
+  height: 100dvh; /* excludes the phone browser's address bar */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
 .game-bar {
   display: flex;
@@ -120,7 +127,7 @@ body.game-page { height: 100vh; display: flex; flex-direction: column; overflow:
 .game-bar .bar-buttons { display: flex; gap: 8px; }
 .game-bar button { padding: 4px 10px; font-size: 13px; }
 
-.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; min-height: 0; overflow: hidden; }
 
 .screen-wrap { position: relative; line-height: 0; border-radius: 6px; box-shadow: 0 0 0 1px #1a1a2a, 0 0 60px rgba(120, 120, 255, 0.08); }
 .screen-wrap canvas {
@@ -211,4 +218,66 @@ body.game-page { height: 100vh; display: flex; flex-direction: column; overflow:
 @media (max-width: 520px) {
   .panel .grid { grid-template-columns: 1fr; }
   .game-bar .keys { display: none; }
+}
+
+/* ---------- touch screens ---------- */
+
+.touch-controls, .rotate-hint, .touch-only { display: none; }
+
+body.touch .touch-only { display: block; }
+body.touch .keyboard-only { display: none; }
+body.touch .game-bar { padding: 6px 12px; padding-top: max(6px, env(safe-area-inset-top)); }
+body.touch .game-bar .keys { display: none; }
+body.touch .stage { padding: 8px; }
+body.touch canvas { touch-action: none; }
+
+body.touch .touch-controls {
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: #0a0a14;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.touch-controls .tbtn, .touch-controls .tpad {
+  height: 84px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: #15152a;
+  color: var(--fg);
+  font: inherit;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.touch-controls .tbtn { flex: 1; }
+.touch-controls .tbtn.arrow { font-size: 28px; }
+.touch-controls .tbtn.fire { flex: 1.6; border-color: var(--red); color: var(--red); }
+.touch-controls .tbtn.zap { flex: 0.9; border-color: var(--green); color: var(--green); font-size: 14px; }
+.touch-controls .tpad { flex: 2.4; border-style: dashed; border-color: var(--vortex); color: var(--vortex); font-size: 13px; text-align: center; padding: 0 6px; }
+.touch-controls .pressed { background: #2a2a4a; transform: scale(0.97); }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  body.touch .rotate-hint {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 18px;
+  }
 }

@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05050b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Star Invaders</title>
@@ -23,6 +30,13 @@
       <canvas id="screen" width="224" height="256" tabindex="0" aria-label="Star Invaders game screen"></canvas>
     </div>
   </main>
+
+  <div class="touch-controls" aria-label="Touch controls">
+    <button type="button" class="tbtn arrow" id="tLeft" aria-label="Move left">&#9664;</button>
+    <button type="button" class="tbtn arrow" id="tRight" aria-label="Move right">&#9654;</button>
+    <button type="button" class="tbtn fire" id="tFire">FIRE</button>
+  </div>
+  <div class="rotate-hint">Turn your phone upright to play.</div>
 
   <div class="panel-backdrop" id="settings" hidden>
     <form class="panel" id="settingsForm" autocomplete="off">
@@ -81,7 +95,9 @@
         <p>Move with <kbd>&larr;</kbd> <kbd>&rarr;</kbd> (or <kbd>A</kbd> <kbd>D</kbd>), fire with <kbd>Space</kbd>, <kbd>&uarr;</kbd> or <kbd>W</kbd>. You can only have one shot on screen at a time.
           Hide behind the shields, but they crumble. Hit the red mystery ship for bonus points.
           If the invaders reach the ground, the game is over.</p>
-        <p><kbd>P</kbd> pause &middot; <kbd>M</kbd> mute &middot; <kbd>Esc</kbd> this menu &middot; <kbd>Enter</kbd> start from the title screen</p>
+        <p class="keyboard-only"><kbd>P</kbd> pause &middot; <kbd>M</kbd> mute &middot; <kbd>Esc</kbd> this menu &middot; <kbd>Enter</kbd> start from the title screen</p>
+        <p class="touch-only">On a phone or tablet, use the &#9664; &#9654; and FIRE buttons under the screen. The Settings button pauses the game.
+          No sound on an iPhone? Check that the silent switch is off.</p>
       </details>
 
       <p class="note">Players, lives and difficulty apply when a new game starts. Settings and high scores are saved in this browser only.</p>
@@ -98,6 +114,7 @@
   <script src="../js/shared/audio.js"></script>
   <script src="../js/shared/input.js"></script>
   <script src="../js/shared/storage.js"></script>
+  <script src="../js/shared/touch.js"></script>
   <script src="../js/shared/pixelfont.js"></script>
   <script src="sprites.js"></script>
   <script src="sound.js"></script>

@@ -19,6 +19,12 @@ A static browser arcade with two tributes: Star Invaders (Space Invaders) and Vo
 - Sound goes through `window.ArcadeAudio` (`tone`, `noise`). Game-specific effects live in `sound.js`.
 - Star Invaders (`SI`) uses a 224x256 pixel screen and `PixelFont`. Vortex (`VX`) uses a 600x800 logical vector screen, drawn at device resolution, with `VectorFont`. Its entities are (lane, depth z) with z=0 at the rim; `webs.js` defines the 16 tube shapes. Mouse-spinner mode uses pointer lock.
 
+## Phones and tablets
+- `js/shared/touch.js` adds `body.touch` when it detects a touch device. CSS then shows `.touch-controls`, `.touch-only` and the rotate-to-portrait hint, and hides `.keyboard-only`.
+- Touch buttons drive the game through `input.hold(action)` and `input.tap(action)`. Star Invaders' arrows also tap `tleft`/`tright`, which change letters when entering initials. Vortex's slide strip feeds `input.spin()`.
+- `fit()` sizes the canvas to the `.stage` element, so the controls bar is accounted for automatically.
+- Add-to-home-screen: `manifest.webmanifest` plus `icons/` (generated pixel-art PNGs). There is deliberately no service worker, so updates always show up right away.
+
 ## Testing
 - Preview: `.claude/launch.json` config "arcade" (python http.server on 8080).
 - The desktop browser pane throttles requestAnimationFrame while hidden. To check logic, run headless Node simulations that stub `document`, or use a temporary page that steps `game.update()` manually. Delete any such page afterward.

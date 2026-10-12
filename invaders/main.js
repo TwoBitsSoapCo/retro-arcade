@@ -47,6 +47,19 @@
   let settings = sanitize(Store.get('invaders.settings', null));
   game.settings = settings;
 
+  // ---------- touch buttons (phones and tablets) ----------
+
+  const Touch = window.ArcadeTouch;
+  const unlockAudio = () => Audio.init();
+  // The arrows also tap tleft/tright, which change letters on the high-score initials screen.
+  Touch.button(document.getElementById('tLeft'), input, { hold: 'left', taps: ['tleft'], onPress: unlockAudio });
+  Touch.button(document.getElementById('tRight'), input, { hold: 'right', taps: ['tright'], onPress: unlockAudio });
+  Touch.button(document.getElementById('tFire'), input, { taps: ['fire', 'select', 'start'], onPress: unlockAudio });
+  Touch.init(() => {
+    game.touch = true;
+    setTimeout(fit); // after the rest of this file has set up
+  });
+
   // ---------- settings panel ----------
 
   function fillForm() {
@@ -166,10 +179,9 @@
 
   function fit() {
     const { W, H } = SI.SCREEN;
-    const bar = document.querySelector('.game-bar').offsetHeight;
-    const availW = window.innerWidth - 32;
-    const availH = window.innerHeight - bar - 32;
-    let s = Math.min(availW / W, availH / H);
+    const stage = document.querySelector('.stage');
+    const pad = Touch.active ? 16 : 32;
+    let s = Math.min((stage.clientWidth - pad) / W, (stage.clientHeight - pad) / H);
     if (s >= 2) s = Math.floor(s); // whole-number scaling keeps pixels crisp
     canvas.style.width = Math.floor(W * s) + 'px';
     canvas.style.height = Math.floor(H * s) + 'px';

@@ -6,6 +6,9 @@
   function create(bindings) {
     const down = new Set();
     const pressed = new Set();
+    // On-screen touch buttons hold or tap actions directly instead of keys.
+    const vDown = new Set();
+    const vPressed = new Set();
     let typed = [];
     let enabled = true;
     const gameKeys = new Set(Object.values(bindings).flat());
@@ -24,18 +27,28 @@
     const any = (set, action) => (bindings[action] || []).some((k) => set.has(k));
 
     return {
-      down: (action) => any(down, action),
-      pressed: (action) => any(pressed, action),
+      down: (action) => any(down, action) || vDown.has(action),
+      pressed: (action) => any(pressed, action) || vPressed.has(action),
       typed: () => typed,
+      hold(action, on) {
+        if (on && enabled) vDown.add(action);
+        else vDown.delete(action);
+      },
+      tap(action) {
+        if (enabled) vPressed.add(action);
+      },
       // Called after each game tick so a press counts only once.
       endTick() {
         pressed.clear();
+        vPressed.clear();
         typed = [];
       },
       setEnabled(on) {
         enabled = on;
         down.clear();
         pressed.clear();
+        vDown.clear();
+        vPressed.clear();
         typed = [];
       },
     };
